@@ -11,10 +11,12 @@ import java.awt.Graphics2D;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+import java.util.Calendar;
 import javax.swing.JComponent;
 import palettegraphiquemultimodale.model.Dessin;
 import palettegraphiquemultimodale.model.Model;
 import palettegraphiquemultimodale.model.Point;
+import palettegraphiquemultimodale.utils.Template;
 
 /**
  *
@@ -39,7 +41,7 @@ public class Panel extends JComponent {
         g.fillRect(0, 0, getWidth(), getHeight());
         
         g.setColor(Color.RED);
-        for(Point p : dessin.getDessin())
+        for(Point p : dessin.getVector())
             g.fillOval((int) p.X, (int) p.Y, 4, 4);
         
         g.setColor(Color.GRAY);
@@ -64,7 +66,9 @@ public class Panel extends JComponent {
             @Override
             public void mouseReleased(MouseEvent e) {
                 model.addDessin(dessin);
+                model.addTemplate(new Template(Calendar.getInstance().getTime().toString(), dessin.getVector()));
                 dessin = new Dessin();
+                
                 repaint();
             }
 

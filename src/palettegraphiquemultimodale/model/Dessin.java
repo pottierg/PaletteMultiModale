@@ -5,6 +5,7 @@
  */
 package palettegraphiquemultimodale.model;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
 
@@ -13,11 +14,7 @@ import java.util.Vector;
  * @author POTTIEGU
  */
 public class Dessin {
-    private Vector<Point> dessin;
-    
-    public Dessin() {
-        dessin = new Vector<>();
-    }
+    private List<Point> dessin = new ArrayList<>();
     
     public void addPoint(Point p) {
         dessin.add(p);
@@ -27,5 +24,8 @@ public class Dessin {
         return dessin;
     }
     
+    public Vector<Point> getVector() {
+        return new Vector<>(dessin);
+    }
     
 }

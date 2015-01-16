@@ -7,6 +7,7 @@ package palettegraphiquemultimodale.model;
 
 import java.util.ArrayList;
 import java.util.List;
+import palettegraphiquemultimodale.utils.Template;
 
 /**
  *
@@ -14,9 +15,11 @@ import java.util.List;
  */
 public class Model {
     private List<Dessin> dessins;
+    private List<Template> templates;
     
     public Model() {
         dessins = new ArrayList<>();
+        templates = new ArrayList<>();
     }
 
     public List<Dessin> getDessins() {
@@ -25,5 +28,10 @@ public class Model {
     
     public void addDessin(Dessin d) {
         dessins.add(d);
+    }
+    
+    public void addTemplate(Template t) {
+        templates.add(t);
+        System.out.println(t.getName() + " created template");
     }
 }
