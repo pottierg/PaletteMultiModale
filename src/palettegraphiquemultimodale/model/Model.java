@@ -32,6 +32,12 @@ public class Model {
     
     public void addTemplate(Template t) {
         templates.add(t);
-        System.out.println(t.getName() + " created template");
+        System.out.println(t.toString());
     }
+
+    public List<Template> getTemplates() {
+        return templates;
+    }
+    
+    
 }

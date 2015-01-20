@@ -16,6 +16,8 @@ import java.util.*;
 public class Template {
     public static final int NUM_POINTS = 64;
     public static final double SQUARE_SIZE = 250.0;
+    
+    private static int templateNumber = 0;
 
     String Name;
     Vector Points;
@@ -26,6 +28,8 @@ public class Template {
         this.Points = Utils.RotateToZero(this.Points);
         this.Points = Utils.ScaleToSquare(this.Points, SQUARE_SIZE);
         this.Points = Utils.TranslateToOrigin(this.Points);
+        
+        templateNumber++;
     }
 
     public String getName() {
@@ -36,5 +40,8 @@ public class Template {
         return Points;
     }
     
+    public String toString() {
+        return "Template no " + templateNumber + ", " + Name;
+    }
     
 }

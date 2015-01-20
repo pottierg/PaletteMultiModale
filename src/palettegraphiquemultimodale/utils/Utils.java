@@ -27,8 +27,6 @@ public class Utils {
             srcPts.addElement(points.elementAt(i));
         }
         
-        System.out.println("taille srcPts=" + srcPts.size());
-        
         Vector dstPts = new Vector(n);
         dstPts.addElement(srcPts.elementAt(0)); //assumes that srcPts.size() > 0
         
