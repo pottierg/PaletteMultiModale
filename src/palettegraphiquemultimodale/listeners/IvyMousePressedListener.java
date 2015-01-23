@@ -7,16 +7,23 @@ package palettegraphiquemultimodale.listeners;
 
 import fr.dgac.ivy.IvyClient;
 import fr.dgac.ivy.IvyMessageListener;
+import java.awt.Point;
+import palettegraphiquemultimodale.orders.OrderManager;
 
 /**
  *
  * @author POTTIEGU
  */
 public class IvyMousePressedListener implements IvyMessageListener {
-
+    
     @Override
     public void receive(IvyClient ic, String[] strings) {
-        System.out.println("Mouse got pressed on x=" + strings[0] + ", y=" + strings[1]);
+        System.out.println("Mouse got pressed on x="
+                + strings[0] + ", y=" + strings[1]);
+        OrderManager.getInstance().orderPosition(
+                new Point(Integer.valueOf(strings[0]),
+                        Integer.valueOf(strings[1])));
+        
     }
     
 }

@@ -22,7 +22,7 @@ public class Main {
         
         IvyDaemon i = null;
         try {
-            i = new IvyDaemon();
+            i = IvyDaemon.getInstance();
         } catch (IvyException ex) {
             Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
         }

@@ -5,11 +5,13 @@
  */
 package palettegraphiquemultimodale.model;
 
+import java.io.Serializable;
+
 /**
  *
  * @author POTTIEGU
  */
-public class Point {
+public class Point implements Serializable{
     public double X, Y;
     
     public Point(double x, double y){

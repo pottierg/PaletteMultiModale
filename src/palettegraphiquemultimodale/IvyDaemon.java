@@ -18,32 +18,60 @@ import palettegraphiquemultimodale.listeners.*;
  */
 public class IvyDaemon {
     private Ivy bus;
+    private static IvyDaemon instance;
     
-    public IvyDaemon() throws IvyException {
+    
+    private IvyDaemon() throws IvyException {
         bus = new Ivy("Multimodal Daemon", "started", null);
         
         bus.bindMsg("^Palette:MousePressed x=(.*) y=(.*)$",
                 new IvyMousePressedListener());
+        
         bus.bindMsg("^Palette:MouseReleased x=(.*) y=(.*)$",
                 new IvyMouseReleasedListener());
         
         bus.start("127.255.255.255:2010");
     }
     
+    public static IvyDaemon getInstance() throws IvyException {
+        if (IvyDaemon.instance == null) {
+            // Le mot-clé synchronized sur ce bloc empêche toute instanciation
+            // multiple même par différents "threads".
+            // Il est TRES important.
+            synchronized(IvyDaemon.class) {
+              if (IvyDaemon.instance == null) {
+                IvyDaemon.instance = new IvyDaemon();
+              }
+            }
+         }
+        
+         return IvyDaemon.instance;
+    }
+    
     public void drawOval(int x, int y, int l, int h,
-            Color fond, Color contour) {
-        String s = "CreerEllipse x=" + x + " y=" + y + " longueur=" + l + 
-                " hauteur=" + h + " couleurFond=" + fond +
-                " couleurContour=" + contour;
+            String fond, String contour) {
+        String s = "Palette:CreerEllipse x=" + x + " y=" + y + " longueur=" + l + 
+                " hauteur=" + h;
+        
+        if(fond.length() > 0)
+            s += " couleurFond=" + fond;
+        
+        if(contour.length() > 0)
+            s += " couleurContour=" + contour;
         
         send(s);
     }
     
     public void drawRectangle(int x, int y, int l, int h,
             String fond, String contour) {
-        String s = "CreerRectangle x=" + x + " y=" + y + " longueur=" + l + 
-                " hauteur=" + h + " couleurFond=" + fond +
-                " couleurContour=" + contour;
+        String s = "Palette:CreerRectangle x=" + x + " y=" + y + " longueur=" + l + 
+                " hauteur=" + h;
+        
+        if(fond.length() > 0)
+            s += " couleurFond=" + fond;
+        
+        if(contour.length() > 0)
+            s += " couleurContour=" + contour;
         
         send(s);
     }

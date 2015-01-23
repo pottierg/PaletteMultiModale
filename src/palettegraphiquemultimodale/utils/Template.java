@@ -7,13 +7,15 @@ package palettegraphiquemultimodale.utils;
  */
 
 
+import java.io.Serializable;
 import java.util.*;
 
 /**
  *
  * @author VIGUIELO
  */
-public class Template {
+public class Template  implements Serializable{
+    static final long serialVersionUID = 42L;
     public static final int NUM_POINTS = 64;
     public static final double SQUARE_SIZE = 250.0;
     

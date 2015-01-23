@@ -5,6 +5,7 @@
  */
 package palettegraphiquemultimodale.views;
 
+import fr.dgac.ivy.IvyException;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -13,12 +14,23 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.Calendar;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JButton;
 import javax.swing.JComponent;
+import palettegraphiquemultimodale.IvyDaemon;
 import palettegraphiquemultimodale.model.Dessin;
 import palettegraphiquemultimodale.model.Model;
 import palettegraphiquemultimodale.model.Point;
+import palettegraphiquemultimodale.orders.ActionsPossible;
+import palettegraphiquemultimodale.orders.Formes;
+import palettegraphiquemultimodale.orders.OrderManager;
 import palettegraphiquemultimodale.utils.Recognizer;
 import palettegraphiquemultimodale.utils.Result;
 import palettegraphiquemultimodale.utils.Template;
@@ -35,11 +47,38 @@ public class Panel extends JComponent {
     
     public Panel(Model m) {
         super();
-        
         registerAsTemplateButton = new JButton("Ajouter aux templates");
         recognizeButton = new JButton("Reconnaître");
         dessin = new Dessin();
         model = m;
+        
+        // Loading serialized templates rectangle and ellipse
+        ObjectInputStream ois = null;
+        
+        try {
+          final FileInputStream rectangleFile = new FileInputStream("Rectangle.ser");
+          final FileInputStream ellipseFile = new FileInputStream("Ellipse.ser");
+
+          ois = new ObjectInputStream(rectangleFile);
+          final Template rectangle = (Template) ois.readObject();
+          model.addTemplate(rectangle);
+
+          ois = new ObjectInputStream(ellipseFile);
+          final Template ellipse = (Template) ois.readObject();
+          model.addTemplate(ellipse);
+
+        } catch (final java.io.IOException | ClassNotFoundException ex) {
+            ex.printStackTrace();
+        } finally {
+            try {
+              if (ois != null) {
+                ois.close();
+              }
+            } catch (final IOException ex) {
+              ex.printStackTrace();
+            }
+        }
+        
         init();
     }
     
@@ -75,7 +114,9 @@ public class Panel extends JComponent {
                 if(dessin.getVector().isEmpty())
                     return;
                 
-                model.addTemplate(new Template(Calendar.getInstance().getTime().toString(), dessin.getVector()));
+                Template t = new Template(Calendar.getInstance().getTime().toString(), dessin.getVector());
+                //serializeTemplate(t);
+                model.addTemplate(t);
                 
                 registerAsTemplateButton.setEnabled(false);
                 recognizeButton.setEnabled(false);
@@ -100,6 +141,12 @@ public class Panel extends JComponent {
                 Recognizer r = new Recognizer(model.getTemplates());
                 Result res = r.Recognize(dessin.getVector());
                 System.out.println("Template reconnu : " + res.Name + ", score:" + res.Score);
+                
+                if(res.Score > 0.9) {
+                    OrderManager.getInstance().orderAction(ActionsPossible.CREATION);
+                    OrderManager.getInstance().orderForme(res.Name.equals("Ellipse") ?
+                            Formes.ELLIPSE : Formes.RECTANGLE);
+                }
                 
                 registerAsTemplateButton.setEnabled(false);
                 recognizeButton.setEnabled(false);
@@ -159,5 +206,27 @@ public class Panel extends JComponent {
         });
     }
     
+    protected void serializeTemplate(Template t) {
+        // Serialization of templates
+        ObjectOutputStream oos = null;
+
+        try {
+          final FileOutputStream fichier = new FileOutputStream(t.getName() + ".ser");
+          oos = new ObjectOutputStream(fichier);
+
+          oos.writeObject(t);
+        } catch (final java.io.IOException ex) {
+          ex.printStackTrace();
+        } finally {
+          try {
+            if (oos != null) {
+              oos.flush();
+              oos.close();
+            }
+          } catch (final IOException ex) {
+            ex.printStackTrace();
+          }
+        }
+    }
     
 }
