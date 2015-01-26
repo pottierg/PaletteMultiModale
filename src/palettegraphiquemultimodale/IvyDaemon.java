@@ -7,7 +7,6 @@ package palettegraphiquemultimodale;
 
 import fr.dgac.ivy.Ivy;
 import fr.dgac.ivy.IvyException;
-import java.awt.Color;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import palettegraphiquemultimodale.listeners.*;
@@ -30,6 +29,18 @@ public class IvyDaemon {
         bus.bindMsg("^Palette:MouseReleased x=(.*) y=(.*)$",
                 new IvyMouseReleasedListener());
         
+        bus.bindMsg("^sra5 Parsed=Action:couleur (.*) Confidence=0,[8-9].*",
+                new IvyMicColorListener());
+        
+        bus.bindMsg("^sra5 Parsed=Action:forme (.*) Confidence=0,[8-9].*",
+                new IvyMicShapeListener());
+        
+        bus.bindMsg("^sra5 Parsed=Action:deplacer (.*) (.*) Confidence=0,[8-9].*",
+                new IvyMicDirectionListener());
+        
+        bus.bindMsg("^sra5 Parsed=Action: (.*) Confidence=0,[8-9].*",
+                new IvyMicActionListener());
+                
         bus.start("127.255.255.255:2010");
     }
     

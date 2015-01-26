@@ -5,7 +5,6 @@
  */
 package palettegraphiquemultimodale.orders;
 
-import java.awt.Color;
 import java.awt.Point;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -15,16 +14,18 @@ import java.util.TimerTask;
  * @author POTTIEGU
  */
 public class OrderManager {
-    public static final int ORDER_DELAY = 10000;
+    public static final int ORDER_DELAY = 3000;
     
     private static Order order;
     private static Timer timer;
     private static OrderManager instance;
+    private boolean timerIsRunning;
     
     private OrderManager() {
         order = null;
         timer = new Timer();
         instance = this;
+        timerIsRunning = false;
     }
     
     public static OrderManager getInstance() {
@@ -45,17 +46,20 @@ public class OrderManager {
     private void createOrder() {
         System.out.println("OrderManager : Creating order");
         order = new Order();
+        timerIsRunning = true;
         
         // Timer
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
-                System.out.println("Running order");
+                System.out.println("Timeout : Running or cancelling order");
                 // If the order has enough info to do something
-                if(order.orderIsComplete())
-                    order.execute();
+                if(order != null)
+                    if(order.orderIsComplete())
+                        order.execute();
                 
                 // Stop the task anyway
+                timerIsRunning = false;
                 order = null;
             }
         }, ORDER_DELAY);
@@ -73,8 +77,7 @@ public class OrderManager {
         }
         
         order.setPosition(p);
-        if(order.orderIsComplete())
-            order.execute();
+        finalizeOrder();
     }
     
     public void orderColor(String c) {
@@ -83,8 +86,7 @@ public class OrderManager {
         }
         
         order.setColor(c);
-        if(order.orderIsComplete())
-            order.execute();
+        finalizeOrder();
     }
     
     public void orderAction(ActionsPossible a) {
@@ -93,17 +95,40 @@ public class OrderManager {
         }
         
         order.setAction(a);
-        if(order.orderIsComplete())
-            order.execute();
+        finalizeOrder();
     }
     
     public void orderForme(Formes f) {
         if(order == null) {
             createOrder();
         }
-        
         order.setForme(f);
-        if(order.orderIsComplete())
+        finalizeOrder();
+    }
+    
+    private void finalizeOrder() {
+        if(order.orderIsComplete()) {
             order.execute();
+            return;
+        }
+        
+        if(timerIsRunning) {
+            timer.cancel();
+            timer = new Timer();
+        }
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                System.out.println("Timeout : Running or cancelling order");
+                // If the order has enough info to do something
+                if(order != null)
+                    if(order.orderHasEnoughInfo())
+                        order.execute();
+                
+                // Stop the task anyway
+                timerIsRunning = false;
+                order = null;
+            }
+        }, ORDER_DELAY);
     }
 }

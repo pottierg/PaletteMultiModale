@@ -5,7 +5,6 @@
  */
 package palettegraphiquemultimodale.orders;
 
-import java.awt.Color;
 import java.awt.Point;
 import palettegraphiquemultimodale.IvyDaemon;
 
@@ -27,16 +26,22 @@ public class Order {
     }
     
     public boolean orderIsComplete() {
-        // TODO
+        return action != null && forme != null && position != null && color != null;
+    }
+    
+    public boolean orderHasEnoughInfo() {
         return action != null && forme != null;
     }
     
     public void execute() {
         // TODO
-        if(!orderIsComplete())
+        if(!orderHasEnoughInfo()) {
+            System.out.println("Order incomplete, cancelling");
             return;
+        }
+        System.out.println("Executing order : " + action + " " + forme + " " + color);
         
-        String fond = color == null ? "" : color;
+        String fond = (color == null ? "" : color);
         int x = position != null ? position.x : 5;
         int y = position != null ? position.y : 5;
         
@@ -45,12 +50,10 @@ public class Order {
                 case CREATION:
                     switch(forme) {
                         case ELLIPSE:
-                            IvyDaemon.getInstance().drawOval(x, y, 100, 100,  "", fond);
+                            IvyDaemon.getInstance().drawOval(x, y, 100, 100,  fond, "");
                             break;
                         case RECTANGLE:
-                            IvyDaemon.getInstance().drawRectangle(x, y, 50, 50, "", "");
-                            break;
-                        default:
+                            IvyDaemon.getInstance().drawRectangle(x, y, 100, 100, fond, "");
                             break;
                     }
                     break;

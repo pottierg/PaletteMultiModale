@@ -5,7 +5,6 @@
  */
 package palettegraphiquemultimodale.views;
 
-import fr.dgac.ivy.IvyException;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -20,11 +19,8 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.Calendar;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JButton;
 import javax.swing.JComponent;
-import palettegraphiquemultimodale.IvyDaemon;
 import palettegraphiquemultimodale.model.Dessin;
 import palettegraphiquemultimodale.model.Model;
 import palettegraphiquemultimodale.model.Point;
