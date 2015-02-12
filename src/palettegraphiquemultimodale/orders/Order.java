@@ -15,39 +15,53 @@ import palettegraphiquemultimodale.IvyDaemon;
 public class Order {
     private ActionsPossible action;
     private String color;
+    // Point that has been designed on the palette
     private Point position;
+    private Point releasedOn;
+    private Point previousPoint;
     private Formes forme;
+    // Name of the shape that has been clicked on
+    private String designedShape;
     
     public Order() {
         position = null;
+        releasedOn = null;
         forme = null;
         action = null;
         color = null;
+        designedShape = null;
     }
     
     public boolean orderIsComplete() {
-        return action != null && forme != null && position != null && color != null;
+        return (action == ActionsPossible.CREATION && forme != null
+                        && position != null && color != null)
+            || (action == ActionsPossible.DEPLACEMENT && designedShape != null
+                        && releasedOn != null);
     }
     
     public boolean orderHasEnoughInfo() {
-        return action != null && forme != null;
+        return (action == ActionsPossible.CREATION && forme != null)
+            || (action == ActionsPossible.DEPLACEMENT && designedShape != null
+                    && releasedOn != null);
     }
     
     public void execute() {
-        // TODO
         if(!orderHasEnoughInfo()) {
             System.out.println("Order incomplete, cancelling");
             return;
         }
-        System.out.println("Executing order : " + action + " " + forme + " " + color);
+        System.out.println("Executing order : " + action);
         
         String fond = (color == null ? "" : color);
         int x = position != null ? position.x : 5;
         int y = position != null ? position.y : 5;
+        int previousX = previousPoint != null ? previousPoint.x : 0;
+        int previousY = previousPoint != null ? previousPoint.y : 0;
         
         try {
             switch(action) {
                 case CREATION:
+                    System.out.println(forme + " " + color);
                     switch(forme) {
                         case ELLIPSE:
                             IvyDaemon.getInstance().drawOval(x, y, 100, 100,  fond, "");
@@ -58,6 +72,8 @@ public class Order {
                     }
                     break;
                 case DEPLACEMENT:
+                    System.out.println(designedShape + " to " + x + ", " + y);
+                    IvyDaemon.getInstance().moveObject(designedShape, x - previousX, y - previousY);
                     break;
             }
         }
@@ -88,6 +104,8 @@ public class Order {
     }
 
     public void setPosition(Point position) {
+        if(this.position != null)
+            this.previousPoint = new Point(this.position);
         this.position = position;
     }
 
@@ -98,7 +116,20 @@ public class Order {
     public void setForme(Formes forme) {
         this.forme = forme;
     }
-    
-    
-    
+
+    public String getDesignedShape() {
+        return designedShape;
+    }
+
+    public void setDesignedShape(String designedShape) {
+        this.designedShape = designedShape;
+    }
+
+    public Point getReleasedOn() {
+        return releasedOn;
+    }
+
+    public void setReleasedOn(Point releasedOn) {
+        this.releasedOn = releasedOn;
+    }
 }

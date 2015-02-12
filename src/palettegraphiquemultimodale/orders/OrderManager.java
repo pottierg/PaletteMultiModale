@@ -30,9 +30,7 @@ public class OrderManager {
     
     public static OrderManager getInstance() {
         if (OrderManager.instance == null) {
-            // Le mot-clé synchronized sur ce bloc empêche toute instanciation
-            // multiple même par différents "threads".
-            // Il est TRES important.
+            // Pattern singleton
             synchronized(OrderManager.class) {
               if (OrderManager.instance == null) {
                 OrderManager.instance = new OrderManager();
@@ -63,11 +61,16 @@ public class OrderManager {
                 order = null;
             }
         }, ORDER_DELAY);
-        
     }
     
     public boolean isCreatingOrder() {
         return order != null;
+    }
+    
+    public ActionsPossible typeOfCurrentOrder() {
+        if(isCreatingOrder())
+            return order.getAction();
+        return null;
     }
     
     public void orderPosition(Point p) {
@@ -76,6 +79,10 @@ public class OrderManager {
             createOrder();
         }
         
+        if(order.getAction() == null && order.getDesignedShape() != null) {
+            System.out.println("OrderManager : Setting move mode");
+            order.setAction(ActionsPossible.DEPLACEMENT);
+        }
         order.setPosition(p);
         finalizeOrder();
     }
@@ -106,13 +113,33 @@ public class OrderManager {
         finalizeOrder();
     }
     
+    public void orderDesignedShape(String nom) {
+        if(order == null) {
+            createOrder();
+        }
+        order.setDesignedShape(nom);
+        finalizeOrder();
+    }
+    
+    public void orderReleasedOn(Point p) {
+        if(order == null) {
+            createOrder();
+        }
+        order.setReleasedOn(p);
+        finalizeOrder();
+    }
+    
     private void finalizeOrder() {
         if(order.orderIsComplete()) {
             order.execute();
+            order = null;
+            timer.cancel();
+            timer = new Timer();
             return;
         }
         
         if(timerIsRunning) {
+            // New piece of order received : new timer
             timer.cancel();
             timer = new Timer();
         }
@@ -122,8 +149,7 @@ public class OrderManager {
                 System.out.println("Timeout : Running or cancelling order");
                 // If the order has enough info to do something
                 if(order != null)
-                    if(order.orderHasEnoughInfo())
-                        order.execute();
+                    order.execute();
                 
                 // Stop the task anyway
                 timerIsRunning = false;

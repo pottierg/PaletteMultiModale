@@ -41,6 +41,9 @@ public class IvyDaemon {
         bus.bindMsg("^sra5 Parsed=Action: (.*) Confidence=0,[8-9].*",
                 new IvyMicActionListener());
                 
+        bus.bindMsg("^Palette:ResultatTesterPoint x=(.*) y=(.*) nom=(.*)",
+                new IvyTestPointListener());
+        
         bus.start("127.255.255.255:2010");
     }
     
@@ -88,13 +91,19 @@ public class IvyDaemon {
     }
     
     public void moveObject(String name, int x, int y) {
-        String s = "DeplacerObjet nom=" + name + " x=" + x + " y=" + y;
+        String s = "Palette:DeplacerObjet nom=" + name + " x=" + x + " y=" + y;
         
         send(s);
     }
     
     public void askInfo(String name) {
-        String s = "";
+        String s = "Palette:DemanderInfo nom=" + name;
+        
+        send(s);
+    }
+    
+    public void testPoint(int x, int y) {
+        String s = "Palette:TesterPoint x=" + x + " y=" + y;
         
         send(s);
     }

@@ -53,15 +53,26 @@ public class Panel extends JComponent {
         
         try {
           final FileInputStream rectangleFile = new FileInputStream("Rectangle.ser");
+          final FileInputStream antiRectangleFile = new FileInputStream("AntiRectangle.ser");
           final FileInputStream ellipseFile = new FileInputStream("Ellipse.ser");
+          final FileInputStream antiEllipseFile = new FileInputStream("AntiEllipse.ser");
+          
 
           ois = new ObjectInputStream(rectangleFile);
           final Template rectangle = (Template) ois.readObject();
           model.addTemplate(rectangle);
+          
+          ois = new ObjectInputStream(antiRectangleFile);
+          final Template antiRectangle = (Template) ois.readObject();
+          model.addTemplate(antiRectangle);
 
           ois = new ObjectInputStream(ellipseFile);
           final Template ellipse = (Template) ois.readObject();
           model.addTemplate(ellipse);
+          
+          ois = new ObjectInputStream(antiEllipseFile);
+          final Template antiEllipse = (Template) ois.readObject();
+          model.addTemplate(antiEllipse);
 
         } catch (final java.io.IOException | ClassNotFoundException ex) {
             ex.printStackTrace();
@@ -138,7 +149,7 @@ public class Panel extends JComponent {
                 Result res = r.Recognize(dessin.getVector());
                 System.out.println("Template reconnu : " + res.Name + ", score:" + res.Score);
                 
-                if(res.Score > 0.9) {
+                if(res.Score > 0.8) {
                     OrderManager.getInstance().orderAction(ActionsPossible.CREATION);
                     OrderManager.getInstance().orderForme(res.Name.equals("Ellipse") ?
                             Formes.ELLIPSE : Formes.RECTANGLE);
