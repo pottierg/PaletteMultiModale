@@ -12,7 +12,6 @@ import java.awt.Point;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import palettegraphiquemultimodale.IvyDaemon;
-import palettegraphiquemultimodale.orders.ActionsPossible;
 import palettegraphiquemultimodale.orders.OrderManager;
 
 /**
@@ -23,12 +22,8 @@ public class IvyMousePressedListener implements IvyMessageListener {
     
     @Override
     public void receive(IvyClient ic, String[] strings) {
-        ActionsPossible action = OrderManager.getInstance().typeOfCurrentOrder();
         int x = Integer.valueOf(strings[0]);
         int y = Integer.valueOf(strings[1]);
-        
-        System.out.println("Mouse got pressed on x="
-                + x + ", y=" + y);
         
         try {
             // Request the name of the designed shape if needed
@@ -37,7 +32,7 @@ public class IvyMousePressedListener implements IvyMessageListener {
             Logger.getLogger(IvyMousePressedListener.class.getName())
                     .log(Level.SEVERE, null, ex);
         }
-        OrderManager.getInstance().orderPosition(
+        OrderManager.getInstance().orderPressedOn(
                 new Point(x, y));
     }
     

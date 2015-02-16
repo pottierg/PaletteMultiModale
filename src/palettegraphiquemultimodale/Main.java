@@ -6,8 +6,11 @@
 package palettegraphiquemultimodale;
 
 import fr.dgac.ivy.IvyException;
+import java.awt.Insets;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JFrame;
+import nyartoolkit.CameroHiroHandler;
 import palettegraphiquemultimodale.model.Model;
 import palettegraphiquemultimodale.views.Palette;
 
@@ -30,5 +33,16 @@ public class Main {
         Palette p = new Palette(m);
         p.setVisible(true);
         
+        CameroHiroHandler frame;
+        try {
+            frame = new CameroHiroHandler();
+            frame.setVisible(true);
+            Insets ins = frame.getInsets();
+            frame.setSize(320 + ins.left + ins.right, 240 + ins.top + ins.bottom);
+            frame.startCapture();
+            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        } catch (Exception ex) {
+            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 }

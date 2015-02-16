@@ -24,8 +24,8 @@ import javax.swing.JComponent;
 import palettegraphiquemultimodale.model.Dessin;
 import palettegraphiquemultimodale.model.Model;
 import palettegraphiquemultimodale.model.Point;
-import palettegraphiquemultimodale.orders.ActionsPossible;
-import palettegraphiquemultimodale.orders.Formes;
+import palettegraphiquemultimodale.orders.ActionPossible;
+import palettegraphiquemultimodale.orders.Forme;
 import palettegraphiquemultimodale.orders.OrderManager;
 import palettegraphiquemultimodale.utils.Recognizer;
 import palettegraphiquemultimodale.utils.Result;
@@ -150,9 +150,9 @@ public class Panel extends JComponent {
                 System.out.println("Template reconnu : " + res.Name + ", score:" + res.Score);
                 
                 if(res.Score > 0.8) {
-                    OrderManager.getInstance().orderAction(ActionsPossible.CREATION);
+                    OrderManager.getInstance().orderAction(ActionPossible.CREATION);
                     OrderManager.getInstance().orderForme(res.Name.equals("Ellipse") ?
-                            Formes.ELLIPSE : Formes.RECTANGLE);
+                            Forme.ELLIPSE : Forme.RECTANGLE);
                 }
                 
                 registerAsTemplateButton.setEnabled(false);

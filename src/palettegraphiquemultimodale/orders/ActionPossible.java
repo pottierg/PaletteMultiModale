@@ -9,6 +9,6 @@ package palettegraphiquemultimodale.orders;
  *
  * @author POTTIEGU
  */
-public enum Formes {
-    ELLIPSE, RECTANGLE;
+public enum ActionPossible {
+    CREATION, DEPLACEMENT;
 }

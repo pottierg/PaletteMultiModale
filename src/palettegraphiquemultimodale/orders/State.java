@@ -9,6 +9,8 @@ package palettegraphiquemultimodale.orders;
  *
  * @author POTTIEGU
  */
-public enum ActionsPossible {
-    CREATION, DEPLACEMENT;
+public enum State {
+    IDLE,
+    INCOMPLETE_MOVE, MOUSE_DRAGGING, HIRO_INITIALIZE, HIRO_DRAGGING,
+    INCOMPLETE_CREATE, PARTIAL_CREATE, CREATE_COLOR, CREATE_POSITION;
 }

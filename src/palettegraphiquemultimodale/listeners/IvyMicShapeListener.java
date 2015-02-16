@@ -7,7 +7,7 @@ package palettegraphiquemultimodale.listeners;
 
 import fr.dgac.ivy.IvyClient;
 import fr.dgac.ivy.IvyMessageListener;
-import palettegraphiquemultimodale.orders.Formes;
+import palettegraphiquemultimodale.orders.Forme;
 import palettegraphiquemultimodale.orders.OrderManager;
 
 /**
@@ -21,7 +21,7 @@ public class IvyMicShapeListener implements IvyMessageListener {
         System.out.println("Message vocal reçu : " + strings[0]);
         
         OrderManager.getInstance().orderForme(strings[0].equals("ellipse") ?
-                Formes.ELLIPSE : Formes.RECTANGLE);
+                Forme.ELLIPSE : Forme.RECTANGLE);
     }
     
 }

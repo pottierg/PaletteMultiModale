@@ -13,27 +13,12 @@
 	<rule id="answer" scope="public"> 
 		<ruleref special="GARBAGE" /> 
 			<one-of>
-			  <item><ruleref uri="#deplacement" /></item>
 			  <item><ruleref uri="#couleur" /></item>
 			  <item><ruleref uri="#forme" /></item>
 			  <item><ruleref uri="#action" /></item>
 			</one-of>          
 			<tag>out = rules.latest().text;</tag>
 		<ruleref special="GARBAGE" />
-	</rule>
-       
-	<rule id="deplacement">
-		<item>deplacer<ruleref uri="#position" /></item>
-	</rule>
-
-	<rule id="position">
-		<one-of>
-			<item>en haut</item>
-			<item>en bas</item>
-			<item>a droite</item>
-			<item>a gauche</item>
-		</one-of>      
-		<tag>out.text = "Action:deplacer " + meta.current().text;</tag>
 	</rule>
   
 	<rule id="couleur">

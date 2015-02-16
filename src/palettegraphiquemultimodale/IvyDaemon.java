@@ -35,7 +35,7 @@ public class IvyDaemon {
         bus.bindMsg("^sra5 Parsed=Action:forme (.*) Confidence=0,[8-9].*",
                 new IvyMicShapeListener());
         
-        bus.bindMsg("^sra5 Parsed=Action:deplacer (.*) (.*) Confidence=0,[8-9].*",
+        bus.bindMsg("^sra5 Parsed=Action:deplacer (.*) (.*) Confidence=0,[7,9].*",
                 new IvyMicDirectionListener());
         
         bus.bindMsg("^sra5 Parsed=Action: (.*) Confidence=0,[8-9].*",

@@ -8,7 +8,7 @@ package palettegraphiquemultimodale.listeners;
 import fr.dgac.ivy.IvyClient;
 import fr.dgac.ivy.IvyMessageListener;
 import java.awt.Point;
-import palettegraphiquemultimodale.orders.ActionsPossible;
+import palettegraphiquemultimodale.orders.ActionPossible;
 import palettegraphiquemultimodale.orders.OrderManager;
 
 /**
@@ -21,7 +21,7 @@ public class IvyMicActionListener implements IvyMessageListener {
     public void receive(IvyClient ic, String[] strings) { 
         System.out.println("Action commandée : " + strings[0]);
         OrderManager.getInstance().orderAction(strings[0].equals("deplacer") ?
-                ActionsPossible.DEPLACEMENT : ActionsPossible.CREATION);
+                ActionPossible.DEPLACEMENT : ActionPossible.CREATION);
         
     }
     

@@ -13,13 +13,12 @@ import palettegraphiquemultimodale.IvyDaemon;
  * @author POTTIEGU
  */
 public class Order {
-    private ActionsPossible action;
+    private ActionPossible action;
     private String color;
     // Point that has been designed on the palette
     private Point position;
     private Point releasedOn;
-    private Point previousPoint;
-    private Formes forme;
+    private Forme forme;
     // Name of the shape that has been clicked on
     private String designedShape;
     
@@ -33,21 +32,22 @@ public class Order {
     }
     
     public boolean orderIsComplete() {
-        return (action == ActionsPossible.CREATION && forme != null
+        return (action == ActionPossible.CREATION && forme != null
                         && position != null && color != null)
-            || (action == ActionsPossible.DEPLACEMENT && designedShape != null
+            || (action == ActionPossible.DEPLACEMENT && designedShape != null
                         && releasedOn != null);
     }
     
     public boolean orderHasEnoughInfo() {
-        return (action == ActionsPossible.CREATION && forme != null)
-            || (action == ActionsPossible.DEPLACEMENT && designedShape != null
+        return (action == ActionPossible.CREATION && forme != null)
+            || (action == ActionPossible.DEPLACEMENT && designedShape != null
                     && releasedOn != null);
     }
     
     public void execute() {
         if(!orderHasEnoughInfo()) {
             System.out.println("Order incomplete, cancelling");
+            System.out.println("Order infos : " + this.toString());
             return;
         }
         System.out.println("Executing order : " + action);
@@ -55,8 +55,8 @@ public class Order {
         String fond = (color == null ? "" : color);
         int x = position != null ? position.x : 5;
         int y = position != null ? position.y : 5;
-        int previousX = previousPoint != null ? previousPoint.x : 0;
-        int previousY = previousPoint != null ? previousPoint.y : 0;
+        int releasedOnX = releasedOn != null ? releasedOn.x : 0;
+        int releasedOnY = releasedOn != null ? releasedOn.y : 0;
         
         try {
             switch(action) {
@@ -72,8 +72,8 @@ public class Order {
                     }
                     break;
                 case DEPLACEMENT:
-                    System.out.println(designedShape + " to " + x + ", " + y);
-                    IvyDaemon.getInstance().moveObject(designedShape, x - previousX, y - previousY);
+                    System.out.println(designedShape + " to " + (releasedOnX - x) + ", " + (releasedOnY - y));
+                    IvyDaemon.getInstance().moveObject(designedShape, (releasedOnX - x), (releasedOnY - y));
                     break;
             }
         }
@@ -83,11 +83,11 @@ public class Order {
         
     }
 
-    public ActionsPossible getAction() {
+    public ActionPossible getAction() {
         return action;
     }
 
-    public void setAction(ActionsPossible action) {
+    public void setAction(ActionPossible action) {
         this.action = action;
     }
 
@@ -104,16 +104,14 @@ public class Order {
     }
 
     public void setPosition(Point position) {
-        if(this.position != null)
-            this.previousPoint = new Point(this.position);
         this.position = position;
     }
 
-    public Formes getForme() {
+    public Forme getForme() {
         return forme;
     }
 
-    public void setForme(Formes forme) {
+    public void setForme(Forme forme) {
         this.forme = forme;
     }
 
@@ -131,5 +129,12 @@ public class Order {
 
     public void setReleasedOn(Point releasedOn) {
         this.releasedOn = releasedOn;
+    }
+    
+    public String toString() {
+        if(this.action == ActionPossible.DEPLACEMENT)
+            return  "Deplacement " + this.designedShape + " to " + this.releasedOn;
+        else
+            return "Création " + this.forme + " " + this.color + " " + this.position;
     }
 }
